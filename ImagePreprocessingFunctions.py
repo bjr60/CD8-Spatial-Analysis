@@ -58,6 +58,7 @@ class markerDescriptions:
         self.currentB2s = []
         for i in range(len(grid)):
             for j in range(len(grid[0])):
+                #for loops go through rows and columns of image looking for points where grid has a value greater than 1 in intensity
                 if grid[i][j] > 1:
                     self.currentLocationsx = []
                     self.currentLocationsy = []
@@ -86,10 +87,13 @@ class markerDescriptions:
                     self.LABs.append([averageL,averageA,averageB2])
                     self.count+=1
         self.sizes = np.asarray(self.sizes)
+        
     def dfs(self, grid, i ,j):
+        #DFS algorithm performing connected components
         if i<0 or j<0 or i>=len(grid) or j>=len(grid[0]) or grid[i][j]!=self.currentValue:
             return
         grid[i][j] = 0
+        #while function finds more points, the size increases, the locations of x and y are added to find the centroid later, and RGB and LAB values are added to later get an average
         self.currentSize += 1
         self.currentLocationsx.append(i)
         self.currentLocationsy.append(j)
@@ -100,6 +104,7 @@ class markerDescriptions:
         self.currentAs.append(imageLAB[i][j][1])
         self.currentBs.append(imageLAB[i][j][2])
         
+        #algorithm looks up, down, left, and right, as well as diagonally giving a total of 8 directions
         self.dfs(grid,i+1,j)
         self.dfs(grid,i-1,j)
         self.dfs(grid,i,j+1)
